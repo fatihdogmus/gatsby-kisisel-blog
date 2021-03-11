@@ -10,6 +10,14 @@ const BlogPostTemplate = ({ data, location }) => {
   const siteTitle = data.site.siteMetadata?.title || `Title`
   const { previous, next } = data
 
+  function formatDate(date) {
+    return new Date(date).toLocaleDateString("tr-tr", {
+      year: "numeric",
+      month: "long",
+      day: "numeric"
+    });
+  }
+
   return (
     <Layout location={location} title={siteTitle}>
       <SEO
@@ -19,11 +27,11 @@ const BlogPostTemplate = ({ data, location }) => {
       <article
         className="blog-post"
         itemScope
-        itemType="http://schema.org/Article"
-      >
+        itemType="http://schema.org/Article">
         <header>
           <h1 itemProp="headline">{post.frontmatter.title}</h1>
-          <p>{post.frontmatter.date}</p>
+          <p>{`Yayın tarihi: ${formatDate(post.frontmatter.date)}`}</p>
+          <p>{`Son güncellenme tarihi: ${formatDate(post.frontmatter.lastUpdated)}`}</p>
         </header>
         <section
           dangerouslySetInnerHTML={{ __html: post.html }}
@@ -41,7 +49,7 @@ const BlogPostTemplate = ({ data, location }) => {
             flexWrap: `wrap`,
             justifyContent: `space-between`,
             listStyle: `none`,
-            padding: 0,
+            padding: 0
           }}
         >
           <li>
@@ -83,7 +91,8 @@ export const pageQuery = graphql`
       html
       frontmatter {
         title
-        date(formatString: "MMMM DD, YYYY")
+        date
+        lastUpdated
         description
       }
     }
